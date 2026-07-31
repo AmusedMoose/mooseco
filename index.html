@@ -11,14 +11,27 @@
 <body>
 
     <header class="site-header">
-        <a href="" class="brand-logo">møøse.co</a>
+        <a href="#" class="brand-logo">møøse.co</a>
     </header>
 
-    <main class="hero">
-        <img src="assets/moose.jpg" alt="Moose in the wild" class="hero-image">
+    <!-- Content section that scrolls into view after the moose exits -->
+    <main class="content-section">
+        <div class="title-box">
+            <h1>møøse.co</h1>
+        </div>
     </main>
 
-    <script src="main.js"></script>
+    <!-- Import map for Three.js and loaders -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+    <script type="module" src="main.js"></script>
 </body>
 
 </html>
