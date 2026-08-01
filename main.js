@@ -11,7 +11,7 @@ let currentResolution = 0.2;
 const BASE_RESOLUTION = 0.20; 
 
 // Ultra-low floor (renders massive macro characters across the screen at maximum scroll)
-const MIN_RESOLUTION = 0.02; 
+const MIN_RESOLUTION = 0.01; 
 
 init();
 
@@ -75,6 +75,9 @@ function init() {
 
   window.addEventListener('resize', onWindowResize);
   window.addEventListener('scroll', onScroll);
+
+  // Call setupCardTilt properly inside init()
+  setupCardTilt();
 }
 
 // Helper to construct / swap the AsciiEffect
@@ -104,6 +107,16 @@ function createAsciiEffect(resolution) {
 // Single, clean onScroll handler
 function onScroll() {
   const scrollY = window.scrollY;
+
+  const scrollHint = document.getElementById('scroll-hint');
+  if (scrollHint) {
+    if (scrollY > 50) {
+      scrollHint.classList.add('is-hidden');
+    } else {
+      scrollHint.classList.remove('is-hidden');
+    }
+  }
+
   const maxScroll = 2000; // Distance over which pixelation occurs
   
   // 1. DYNAMIC RESOLUTION SCALING (0px to 2000px)
@@ -157,4 +170,53 @@ function animate() {
   }
 
   effect.render(scene, camera);
+}
+
+function setupCardTilt() {
+  const isDesktop = window.matchMedia('(pointer: fine)').matches;
+  const card = document.querySelector('.title-box');
+
+  if (!isDesktop || !card) return;
+
+  const maxTilt = 10; // Degrees of 3D tilt
+  const maxPan = 10;  // Pixels to pan toward the cursor
+
+  let isHovering = false;
+  let mouseX = 0;
+  let mouseY = 0;
+
+  // Track cursor position across the whole window for panning
+  window.addEventListener('mousemove', (e) => {
+    // Calculate global mouse offset from viewport center (-1 to 1)
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+
+    updateTransform();
+  });
+
+  // Track hover state specifically for scaling up
+  card.addEventListener('mouseenter', () => {
+    isHovering = true;
+    updateTransform();
+  });
+
+  card.addEventListener('mouseleave', () => {
+    isHovering = false;
+    updateTransform();
+  });
+
+  function updateTransform() {
+    // 1. Pan card position based on viewport mouse position
+    const panX = mouseX * maxPan;
+    const panY = mouseY * maxPan;
+
+    // 2. Tilt card orientation based on viewport mouse position
+    const rotateX = -mouseY * maxTilt;
+    const rotateY = mouseX * maxTilt;
+
+    // 3. Only enlarge (scale) when hovering directly over the card
+    const scale = isHovering ? 1.04 : 1.0;
+
+    card.style.transform = `translate3d(${panX}px, ${panY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, 1)`;
+  }
 }

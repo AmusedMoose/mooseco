@@ -35,6 +35,8 @@ body {
   padding: 1.5rem 2rem;
   z-index: 100;
   pointer-events: none;
+    filter: drop-shadow(0px 0px 10px rgba(217, 70, 239,0.6)) 
+          drop-shadow(0px 0px 20px rgba(139, 92, 246,0.6)) !important;
 }
 
 .brand-logo {
@@ -90,29 +92,38 @@ body {
 }
 
 /* Push the main section down so it sits past the 2000px pixelation sequence */
+/* Update content section to enable 3D depth space */
 .content-section {
   position: relative;
-  z-index: 10; /* Ensures it sits on top of the ASCII container */
-  margin-top: 2000px; 
+  z-index: 10;
+  margin-top: 2000px;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  /* Gives 3D perspective to child elements */
+  perspective: 500px; 
 }
 
 /* Styled text box container */
+/* Styled text box container with boosted contrast & blur */
 .title-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(217, 70, 239, 0.2);
+  background: rgba(15, 15, 18, 0.75);
+  border: 1px solid rgba(217, 70, 239, 0.3);
   border-radius: 16px;
-  padding: 3rem 5rem;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8),
-              0 0 15px rgba(139, 92, 246, 0.2);
+  padding: 2.5rem 4rem;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9),
+              0 0 20px rgba(139, 92, 246, 0.25);
   text-align: center;
-}
 
+  /* Smooth interpolation for mouse move and mouse leave */
+  will-change: transform;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
 /* Gradient Title */
 .title-box h1 {
   font-size: 3rem;
@@ -121,5 +132,80 @@ body {
   background: linear-gradient(135deg, #d946ef, #8b5cf6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0px 0px 12px rgba(217, 70, 239, 0.4));
+  filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.8));
+  margin-bottom: 0.5rem;
+}
+
+/* Subtitle / Email Text */
+.contact-email {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+.contact-email:hover {
+  color: #ffffff;
+}
+
+/* Scroll Indicator Hint */
+.scroll-indicator {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.4s ease;
+}
+
+.scroll-indicator span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8b5cf6;
+}
+
+.scroll-indicator .chevron {
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid #d946ef;
+  border-bottom: 2px solid #d946ef;
+  transform: rotate(45deg);
+  animation: bounce 1.8s infinite;
+}
+
+/* Smooth bobbing animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: rotate(45deg) translate(0, 0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: rotate(45deg) translate(5px, 5px);
+    opacity: 1;
+  }
+}
+
+/* Class added by JS to hide indicator on scroll */
+.scroll-indicator.is-hidden {
+  opacity: 0;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 99;
+  pointer-events: none;
+  opacity: 0.6;
 }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Favicon Renderer</title>
+</head>
+
+<body
+    style="background: #2121c4; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; color: white;">
+
+    <h2>Favicon Preview (512x512)</h2>
+    <canvas id="faviconCanvas" width="512" height="512"
+        style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></canvas>
+    <button id="downloadBtn"
+        style="margin-top: 20px; padding: 12px 24px; font-weight: bold; background: linear-gradient(135deg, #d946ef, #8b5cf6); border: none; border-radius: 8px; color: white; cursor: pointer;">
+        Download PNG Favicon
+    </button>
+
+    <script>
+        const canvas = document.getElementById('faviconCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Draw background
+        ctx.fillStyle = '#0f0f12';
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Apply Neon Glow Filters
+        ctx.shadowColor = '#d946ef';
+        ctx.shadowBlur = 35;
+
+        // Apply Gradient
+        const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+        gradient.addColorStop(0, '#d946ef');
+        gradient.addColorStop(0.2, '#d946ef');
+        gradient.addColorStop(0.8, '#8b5cf6');
+        gradient.addColorStop(1, '#8b5cf6');
+
+        // Render Text Character
+        ctx.fillStyle = gradient;
+        ctx.font = '800 480px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        /* 
+           Visual Optical Centering:
+           Y shifted up to 225px (instead of 256px) so the visual 
+           center of mass sits dead-center on the canvas.
+        */
+        ctx.fillText('ø', 256, 230);
+
+        // Download handler
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'favicon.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+
+</html>
